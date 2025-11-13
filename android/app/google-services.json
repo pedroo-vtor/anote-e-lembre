@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "257678138114",
+    "project_id": "anote-e-lembre",
+    "storage_bucket": "anote-e-lembre.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257678138114:android:ef8ee1d8430c69a333401b",
+        "android_client_info": {
+          "package_name": "pedroovtorcom.github.anote_e_lembre"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpatHF7tdXfidCbnxRgzjk9N1N70QQFLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
