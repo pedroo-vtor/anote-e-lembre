@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:anote_e_lembre/firebase_options.dart';
+import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
+import 'package:anote_e_lembre/views/login_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => UsuarioViewModel())],
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: LoginView()),
+    ),
+  );
 }
