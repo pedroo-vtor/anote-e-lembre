@@ -6,6 +6,15 @@ version: 0.1.0
 environment:
   sdk: ^3.10.0-75.1.beta
 
+fonts:
+  - family: Akatab-Regular
+    fonts:
+      - asset: assets/fonts/Tarragon.otf
+
+  - family: Akatab-Bold
+    fonts:
+      - asset: assets/fonts/akatab/Akatab-Bold.ttf
+
 dependencies:
   flutter:
     sdk: flutter

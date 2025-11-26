@@ -1,9 +1,9 @@
 import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
-import 'package:anote_e_lembre/views/cadastro_view.dart';
-import 'package:anote_e_lembre/views/home_view.dart';
+import 'package:anote_e_lembre/views/login_views/cadastro_view.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/lista_tarefas_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:anote_e_lembre/views/reset_senha_view.dart';
+import 'package:anote_e_lembre/views/login_views/reset_senha_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -54,7 +54,7 @@ class LoginView extends StatelessWidget {
                     if (user) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Home()),
+                        MaterialPageRoute(builder: (context) => ListaTarefasView()),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
