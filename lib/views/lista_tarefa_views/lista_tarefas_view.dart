@@ -1,7 +1,7 @@
-import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/appbar_view.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/tarefa_view.dart';
 
 class ListaTarefasView extends StatelessWidget {
   const ListaTarefasView({super.key});
@@ -11,14 +11,21 @@ class ListaTarefasView extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        // Appbar
         appBar: ListaTarefaAppBar(),
-        body: const TabBarView(
+
+        body: TabBarView(
           children: [
-            Center(
-              child: Text(
-                "Todas As Tarefas",
-                style: TextStyle(color: Color(0xFF000000)),
-              ),
+            // Aba 1: Todas as Tarefas
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                TarefaView(),
+                SizedBox(height: 10), // Espaço entre os cards
+                TarefaView(),
+                SizedBox(height: 10),
+                TarefaView(),
+              ],
             ),
             Center(
               child: Text(
