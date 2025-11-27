@@ -81,7 +81,9 @@ class AdicionarTarefaView extends StatelessWidget {
                     children: [
                       //Botão Cancelar
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                         style: TextButton.styleFrom(
                           backgroundColor: Color(0xFF999E9A),
                           shape: RoundedRectangleBorder(

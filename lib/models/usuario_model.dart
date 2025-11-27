@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Usuario {
@@ -17,6 +18,17 @@ class Usuario {
         password: senha,
       );
 
+      final user = FirebaseAuth.instance.currentUser;
+      final userRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user?.uid);
+
+      await userRef.set({
+        'nome': nome,
+        'email': email,
+        'dataRegistro': DateTime.now(),
+      });
+
       return {
         "criado": true,
         "conta": contaCadastrada,
@@ -34,10 +46,23 @@ class Usuario {
         password: senha,
       );
 
+      FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(credencial.user?.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists) {
+              nome = documentSnapshot.get('nome');
+              email = documentSnapshot.get('email');
+            }
+          });
+
       return {
         "logado": true,
         "usuario": credencial.user,
-        "msg": "Login criada com sucesso",
+        "nome": nome,
+        "email": email,
+        "msg": "Login criada com sucesso.",
       };
     } on FirebaseAuthException catch (e) {
       return {"logado": false, "usuario": null, "msg": e.message};

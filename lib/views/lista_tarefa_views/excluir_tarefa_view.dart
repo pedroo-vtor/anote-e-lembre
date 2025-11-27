@@ -35,7 +35,7 @@ class ExcluirTarefaView extends StatelessWidget {
           //Botão Cancelar
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             },
             style: TextButton.styleFrom(
               backgroundColor: const Color(0xFF999E9A),
