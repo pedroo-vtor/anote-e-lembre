@@ -29,7 +29,7 @@ class ListaTarefaAppBar extends StatelessWidget implements PreferredSizeWidget {
         unselectedLabelStyle: TextStyle(fontSize: 17),
         tabs: [
           Tab(text: "Todas"),
-          Tab(text: "Pedentes"),
+          Tab(text: "Pendentes"),
           Tab(text: "Feitas"),
         ],
       ),

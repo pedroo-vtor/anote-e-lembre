@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/appbar_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/tarefa_view.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/adicionar_tarefa_view.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/excluir_todas_tarefas_view.dart';
 
 class ListaTarefasView extends StatelessWidget {
   const ListaTarefasView({super.key});
@@ -13,12 +15,14 @@ class ListaTarefasView extends StatelessWidget {
       child: Scaffold(
         // Appbar
         appBar: ListaTarefaAppBar(),
+        floatingActionButton: AdicionarTarefaView(),
 
         body: TabBarView(
           children: [
             // Aba 1: Todas as Tarefas
             ListView(
               padding: const EdgeInsets.all(16),
+
               children: [
                 TarefaView(),
                 SizedBox(height: 10), // Espaço entre os cards
@@ -29,7 +33,7 @@ class ListaTarefasView extends StatelessWidget {
             ),
             Center(
               child: Text(
-                "Tarefas Pedentes",
+                "Tarefas Pendentes",
                 style: TextStyle(color: Color(0xFF000000)),
               ),
             ),
