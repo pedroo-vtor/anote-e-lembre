@@ -15,29 +15,48 @@ class ListaTarefasView extends StatelessWidget {
       child: Scaffold(
         // Appbar
         appBar: ListaTarefaAppBar(),
-        floatingActionButton: ExcluirTodasTarefasView(),
+
+        // Lógica de para alterar de de floatingActionButton
+        floatingActionButton: Builder(
+          builder: (context) {
+            final TabController controller = DefaultTabController.of(context);
+            return AnimatedBuilder(
+              animation: controller,
+              builder: (context, child) {
+                // Se o index for 2, retorna o botão de excluir,
+                // Caso contrário (0 ou 1), retorna o botão de adicionar
+                return controller.index == 2
+                    ? const ExcluirTodasTarefasView()
+                    : const AdicionarTarefaView();
+              },
+            );
+          },
+        ),
 
         body: TabBarView(
           children: [
             // Aba 1: Todas as Tarefas
             ListView(
               padding: const EdgeInsets.all(16),
-
-              children: [
+              children: const [
                 TarefaView(),
-                SizedBox(height: 10), // Espaço entre os cards
+                SizedBox(height: 10),
                 TarefaView(),
                 SizedBox(height: 10),
                 TarefaView(),
               ],
             ),
-            Center(
+
+            // Aba 2: Pendentes
+            const Center(
               child: Text(
                 "Tarefas Pendentes",
                 style: TextStyle(color: Color(0xFF000000)),
               ),
             ),
-            Center(
+
+            // Aba 3: Feitas
+            const Center(
               child: Text(
                 "Tarefas Feitas",
                 style: TextStyle(color: Color(0xFF000000)),
