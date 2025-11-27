@@ -12,9 +12,9 @@ class EditarTarefaView extends StatelessWidget {
 
       //Título do Alert Dialog (Adicionar Tarefa)
       title: const Text(
-        "Editar Tarefa",
+        "Editando Tarefa",
         textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
 
       //Cor de Fundo

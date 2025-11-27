@@ -21,7 +21,7 @@ class AdicionarTarefaView extends StatelessWidget {
               title: const Text(
                 "Adicionar Tarefa",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
 
               //Cor de Fundo

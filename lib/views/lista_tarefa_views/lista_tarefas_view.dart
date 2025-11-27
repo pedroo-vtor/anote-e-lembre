@@ -15,7 +15,7 @@ class ListaTarefasView extends StatelessWidget {
       child: Scaffold(
         // Appbar
         appBar: ListaTarefaAppBar(),
-        floatingActionButton: AdicionarTarefaView(),
+        floatingActionButton: ExcluirTodasTarefasView(),
 
         body: TabBarView(
           children: [
