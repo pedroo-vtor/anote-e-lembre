@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/editar_tarefa_view.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/excluir_tarefa_view.dart';
 
 class TarefaView extends StatefulWidget {
   const TarefaView({super.key});
@@ -121,7 +122,12 @@ class _TarefaViewState extends State<TarefaView> {
                     Column(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ExcluirTarefaView(),
+                            );
+                          },
                           icon: Icon(
                             Icons.delete,
                             size: 30,
