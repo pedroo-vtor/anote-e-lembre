@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/editar_tarefa_view.dart';
 
 class TarefaView extends StatefulWidget {
   const TarefaView({super.key});
@@ -22,10 +23,8 @@ class _TarefaViewState extends State<TarefaView> {
 
       child: Column(
         children: [
-          
           // Cabeçalho (Sempre Visível)
           ListTile(
-
             // Título da Tarefa
             title: const Text("Título da Tarefa"),
 
@@ -68,7 +67,6 @@ class _TarefaViewState extends State<TarefaView> {
           if (tarefaExpandida)
             Column(
               children: [
-                
                 //  Divisão entre Título e Descrição
                 Divider(height: 20, indent: 16, endIndent: 16),
 
@@ -87,12 +85,18 @@ class _TarefaViewState extends State<TarefaView> {
                 // Botões de Ações (Editar e Excluir)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+
                   // Botão Editar
                   children: [
                     Column(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => EditarTarefaView(),
+                            );
+                          },
                           icon: Icon(
                             Icons.edit,
                             size: 30,
