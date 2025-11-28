@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import necessário
+import 'package:provider/provider.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/editar_tarefa_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/excluir_tarefa_view.dart';
-import 'package:anote_e_lembre/views_models/tarefa_view_model.dart'; // Import necessário
+import 'package:anote_e_lembre/views_models/tarefa_view_model.dart';
 
 class TarefaView extends StatefulWidget {
   // Recebe o índice da tarefa
@@ -20,28 +20,27 @@ class _TarefaViewState extends State<TarefaView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<TarefaViewModel>(
       builder: (context, tarefaViewModel, child) {
-        
         // Recupera o objeto tarefa
         final tarefaAtual = tarefaViewModel.ListaTarefas[widget.indexTarefa];
 
         // Formatação Card
         return Card(
           elevation: 3,
-          margin: const EdgeInsets.symmetric(vertical: 0), // Margin controlado pelo ListView
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          margin: const EdgeInsets.symmetric(
+            vertical: 0,
+          ), // Margin controlado pelo ListView
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           color: const Color(0xFFF7F2FA),
           child: Column(
             children: [
-
               // Cabeçalho (Sempre Visível)
               ListTile(
                 // Título da Tarefa
-                title: Text(
-                    tarefaAtual.tituloTarefa ?? "Sem Título"
-                ),
+                title: Text(tarefaAtual.tituloTarefa ?? "Sem Título"),
 
                 // CheckBox
                 leading: Checkbox(
@@ -97,7 +96,6 @@ class _TarefaViewState extends State<TarefaView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-
                         // Botão Editar
                         Column(
                           children: [
@@ -105,7 +103,7 @@ class _TarefaViewState extends State<TarefaView> {
                               onPressed: () {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => EditarTarefaView(), 
+                                  builder: (context) => EditarTarefaView(),
                                 );
                               },
                               icon: const Icon(
@@ -135,7 +133,10 @@ class _TarefaViewState extends State<TarefaView> {
                               onPressed: () {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => ExcluirTarefaView(),
+                                  builder: (context) => ExcluirTarefaView(
+                                    tarefaId: tarefaAtual.id,
+                                    tituloTarefa: tarefaAtual.tituloTarefa,
+                                  ),
                                 );
                               },
                               icon: const Icon(
