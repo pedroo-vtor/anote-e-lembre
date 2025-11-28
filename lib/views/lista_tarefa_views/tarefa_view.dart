@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import necessário
 import 'package:anote_e_lembre/views/lista_tarefa_views/editar_tarefa_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/excluir_tarefa_view.dart';
+import 'package:anote_e_lembre/views_models/tarefa_view_model.dart'; // Import necessário
 
 class TarefaView extends StatefulWidget {
-  const TarefaView({super.key});
+  // Recebe o índice da tarefa
+  final int indexTarefa;
+
+  const TarefaView({super.key, required this.indexTarefa});
 
   @override
   State<TarefaView> createState() => _TarefaViewState();
@@ -15,142 +20,149 @@ class _TarefaViewState extends State<TarefaView> {
 
   @override
   Widget build(BuildContext context) {
-    // Formatação Card
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      color: const Color(0xFFF7F2FA),
 
-      child: Column(
-        children: [
-          // Cabeçalho (Sempre Visível)
-          ListTile(
-            // Título da Tarefa
-            title: const Text("Título da Tarefa"),
+    return Consumer<TarefaViewModel>(
+      builder: (context, tarefaViewModel, child) {
+        
+        // Recupera o objeto tarefa
+        final tarefaAtual = tarefaViewModel.ListaTarefas[widget.indexTarefa];
 
-            // CheckBox
-            leading: Checkbox(
-              value: tarefaFeita,
-              activeColor: const Color(0xFF00FF77),
-              onChanged: (newBool) {
-                setState(() {
-                  tarefaFeita = newBool ?? false;
-                });
-              },
-            ),
+        // Formatação Card
+        return Card(
+          elevation: 3,
+          margin: const EdgeInsets.symmetric(vertical: 0), // Margin controlado pelo ListView
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          color: const Color(0xFFF7F2FA),
+          child: Column(
+            children: [
 
-            // Expandir
-            trailing: IconButton(
-              // Lógica da Expansão
-              onPressed: () {
-                setState(() {
-                  tarefaExpandida = !tarefaExpandida;
-                });
-              },
+              // Cabeçalho (Sempre Visível)
+              ListTile(
+                // Título da Tarefa
+                title: Text(
+                    tarefaAtual.tituloTarefa ?? "Sem Título"
+                ),
 
-              // Ícone Expandir
-              icon: Icon(
-                tarefaExpandida ? Icons.expand_less : Icons.expand_more,
-                color: Color(0xFF000000),
-              ),
-            ),
+                // CheckBox
+                leading: Checkbox(
+                  value: tarefaFeita,
+                  activeColor: const Color(0xFF00FF77),
+                  onChanged: (newBool) {
+                    setState(() {
+                      tarefaFeita = newBool ?? false;
+                    });
+                  },
+                ),
 
-            // Lógica da Expansão
-            onTap: () {
-              setState(() {
-                tarefaExpandida = !tarefaExpandida;
-              });
-            },
-          ),
-
-          // Conteúdo Expansível
-          if (tarefaExpandida)
-            Column(
-              children: [
-                //  Divisão entre Título e Descrição
-                Divider(height: 20, indent: 16, endIndent: 16),
-
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla iaculis elit id magna ultrices, laoreet fringilla nulla iaculis. Suspendisse mattis, neque id tincidunt facilisis, nibh purus pulvinar enim, et pretium neque tellus maximus felis. Sed mauris lorem, semper in urna nec, eleifend mattis orci.",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14),
+                // Botão para expandir
+                trailing: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      tarefaExpandida = !tarefaExpandida;
+                    });
+                  },
+                  icon: Icon(
+                    tarefaExpandida ? Icons.expand_less : Icons.expand_more,
+                    color: const Color(0xFF000000),
                   ),
                 ),
+                onTap: () {
+                  setState(() {
+                    tarefaExpandida = !tarefaExpandida;
+                  });
+                },
+              ),
 
-                //  Divisão entre Descrição e os Botões de Ações
-                Divider(height: 20, indent: 16, endIndent: 16),
-
-                // Botões de Ações (Editar e Excluir)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-
-                  // Botão Editar
+              // Conteúdo Expansível
+              if (tarefaExpandida)
+                Column(
                   children: [
-                    Column(
+                    // Divisão entre título e o conteúdo expandido.
+                    const Divider(height: 20, indent: 16, endIndent: 16),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      // Descrição da Tarefa
+                      child: Text(
+                        tarefaAtual.descricaoTarefa ?? "Sem descrição",
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+
+                    // Divisão entre Descrição e Botões.
+                    const Divider(height: 20, indent: 16, endIndent: 16),
+
+                    // Botões de Ações (Editar e Excluir)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => EditarTarefaView(),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.edit,
-                            size: 30,
-                            color: Color(0xFFFF9B00),
-                          ),
+
+                        // Botão Editar
+                        Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => EditarTarefaView(), 
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.edit,
+                                size: 30,
+                                color: Color(0xFFFF9B00),
+                              ),
+                            ),
+                            const Text(
+                              'Editar',
+                              style: TextStyle(
+                                color: Color(0xFFFF9B00),
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Editar',
-                          style: TextStyle(
-                            color: Color(0xFFFF9B00),
-                            fontSize: 14,
-                          ),
-                          textAlign: TextAlign.center,
+
+                        // Espaçamento entre os botões
+                        const SizedBox(width: 40),
+
+                        // Botão Excluir
+                        Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ExcluirTarefaView(),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                size: 30,
+                                color: Color(0xFFFF1800),
+                              ),
+                            ),
+                            const Text(
+                              'Excluir',
+                              style: TextStyle(
+                                color: Color(0xFFFF1800),
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-
-                    //Espaçamento entre os Botões
-                    SizedBox(width: 40),
-
-                    // Botão Excluir
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => ExcluirTarefaView(),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            size: 30,
-                            color: Color(0xFFFF1800),
-                          ),
-                        ),
-                        Text(
-                          'Excluir',
-                          style: TextStyle(
-                            color: Color(0xFFFF1800),
-                            fontSize: 14,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+                    const SizedBox(height: 8),
                   ],
                 ),
-                SizedBox(height: 8),
-              ],
-            ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
