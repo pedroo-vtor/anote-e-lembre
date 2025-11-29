@@ -4,6 +4,7 @@ import 'package:anote_e_lembre/views_models/tarefa_view_model.dart';
 import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
 
 class ExcluirTarefaView extends StatelessWidget {
+
   final String tarefaId;
   final String tituloTarefa;
   const ExcluirTarefaView({

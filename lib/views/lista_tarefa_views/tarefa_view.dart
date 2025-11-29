@@ -103,7 +103,12 @@ class _TarefaViewState extends State<TarefaView> {
                               onPressed: () {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => EditarTarefaView(),
+                                  builder: (context) => EditarTarefaView(
+                                    tarefaId: tarefaAtual.id,
+                                    tituloTarefaAtual: tarefaAtual.tituloTarefa,
+                                    descricaoTarefaAtual:
+                                        tarefaAtual.descricaoTarefa,
+                                  ),
                                 );
                               },
                               icon: const Icon(

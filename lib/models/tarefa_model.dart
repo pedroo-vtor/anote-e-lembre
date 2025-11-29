@@ -55,8 +55,8 @@ class Tarefa {
         .collection("tarefas")
         .doc(tarefaId)
         .update({
-          "tituloTarefa": tituloTarefa,
-          "descricaoTarefa": descricaoTarefa,
+          "tituloTarefa": novoTituloTarefa,
+          "descricaoTarefa": novaDescricaoTarefa,
         });
   }
 
