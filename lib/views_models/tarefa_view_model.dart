@@ -8,7 +8,7 @@ class TarefaViewModel extends ChangeNotifier {
   String? get tituloTarefa => _tituloTarefa;
   String? get descricaoTarefa => _descricaoTarefa;
 
-  List<Tarefa> ListaTarefas = [];
+  List<Tarefa> listaTarefas = [];
 
   Tarefa? tarefa;
 
@@ -31,6 +31,7 @@ class TarefaViewModel extends ChangeNotifier {
       id: "",
       tituloTarefa: tituloTarefa,
       descricaoTarefa: descricaoTarefa,
+      tarefaFeita: false,
     );
     tarefa?.adicionarTarefa(uid);
     await carregarTarefa(uid);
@@ -39,12 +40,12 @@ class TarefaViewModel extends ChangeNotifier {
   }
 
   Future<void> carregarTarefa(String uid) async {
-    tarefa = Tarefa(id: uid, tituloTarefa: "", descricaoTarefa: "");
+    Tarefa tarefaAuxiliar = Tarefa(id: "", tituloTarefa: "", descricaoTarefa: "");
     print('USUÁRIO ID NO VIEW MODEL: $uid');
-    ListaTarefas = await tarefa!.lerTarefas(uid);
+    
+    listaTarefas = await tarefaAuxiliar.lerTarefas(uid);
 
-    print(ListaTarefas);
-
+    print("Tarefas carregadas: ${listaTarefas.length}");
     notifyListeners();
   }
 
@@ -68,5 +69,17 @@ class TarefaViewModel extends ChangeNotifier {
     tarefa = Tarefa(id: uid, tituloTarefa: "", descricaoTarefa: "");
     await tarefa!.deletarTarefa(uid, tarefaId);
     notifyListeners();
+  }
+
+  Future<void> alternarStatusTarefa(String uid, Tarefa tarefaAlvo, bool novoStatus) async {
+    final index = listaTarefas.indexWhere((t) => t.id == tarefaAlvo.id);
+    if (index != -1) {
+      listaTarefas[index].tarefaFeita = novoStatus;
+      notifyListeners();
+    }
+
+    Tarefa tarefaAuxiliar = Tarefa(id: "", tituloTarefa: "", descricaoTarefa: "");
+    await tarefaAuxiliar.atualizarStatus(uid, tarefaAlvo.id, novoStatus);
+    
   }
 }

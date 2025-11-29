@@ -4,11 +4,13 @@ class Tarefa {
   String id;
   String tituloTarefa;
   String descricaoTarefa;
+  bool tarefaFeita;
 
   Tarefa({
     required this.id,
     required this.tituloTarefa,
     required this.descricaoTarefa,
+    this.tarefaFeita = false
   });
 
   // Adicionar Tarefa.
@@ -31,15 +33,17 @@ class Tarefa {
         .collection("tarefas")
         .get();
 
-    List<Tarefa> ListaTarefas = query.docs.map((doc) {
+    List<Tarefa> listaTarefas = query.docs.map((doc) {
+      final data = doc.data();
       return Tarefa(
         id: doc.id,
-        tituloTarefa: doc["tituloTarefa"],
-        descricaoTarefa: doc["descricaoTarefa"],
+        tituloTarefa: data["tituloTarefa"] ?? "",
+        descricaoTarefa: data["descricaoTarefa"] ?? "",
+        tarefaFeita: data["feita"] ?? false, // Lê o status, se não existir, assume false
       );
     }).toList();
 
-    return ListaTarefas;
+    return listaTarefas;
   }
 
   // Atualizar Tarefa
@@ -69,4 +73,21 @@ class Tarefa {
         .doc(tarefaId)
         .delete();
   }
+
+  Future<void> atualizarStatus(
+    String userId,
+    String tarefaId,
+    bool novoStatus,
+  ) async {
+    await FirebaseFirestore.instance
+        .collection("usuarios")
+        .doc(userId)
+        .collection("tarefas")
+        .doc(tarefaId)
+        .update({
+      "feita": novoStatus,
+    });
+  }
+
+  
 }

@@ -1,174 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:anote_e_lembre/models/tarefa_model.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/editar_tarefa_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/excluir_tarefa_view.dart';
 import 'package:anote_e_lembre/views_models/tarefa_view_model.dart';
+import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
 
 class TarefaView extends StatefulWidget {
-  // Recebe o índice da tarefa
-  final int indexTarefa;
+  final Tarefa tarefaAtual;
 
-  const TarefaView({super.key, required this.indexTarefa});
+  const TarefaView({super.key, required this.tarefaAtual});
 
   @override
   State<TarefaView> createState() => _TarefaViewState();
 }
 
 class _TarefaViewState extends State<TarefaView> {
-  bool tarefaFeita = false;
   bool tarefaExpandida = false;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TarefaViewModel>(
-      builder: (context, tarefaViewModel, child) {
-        // Recupera o objeto tarefa
-        final tarefaAtual = tarefaViewModel.ListaTarefas[widget.indexTarefa];
+    final tarefaViewModel = Provider.of<TarefaViewModel>(context, listen: false);
+    final usuarioViewModel = Provider.of<UsuarioViewModel>(context, listen: false);
 
-        // Formatação Card
-        return Card(
-          elevation: 3,
-          margin: const EdgeInsets.symmetric(
-            vertical: 0,
-          ), // Margin controlado pelo ListView
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      color: const Color(0xFFF7F2FA),
+      child: Column(
+        children: [
+          ListTile(
+            // Título
+            title: Text(widget.tarefaAtual.tituloTarefa),
+            
+            // CheckBox
+            leading: Checkbox(
+              value: widget.tarefaAtual.tarefaFeita,
+              activeColor: const Color(0xFF00FF77),
+              onChanged: (newBool) {
+                if (usuarioViewModel.usuario?.id != null) {
+                   tarefaViewModel.alternarStatusTarefa(
+                     usuarioViewModel.usuario!.id!, 
+                     widget.tarefaAtual, 
+                     newBool ?? false
+                   );
+                }
+              },
+            ),
+
+            // Botão Expandir
+            trailing: IconButton(
+              onPressed: () {
+                setState(() {
+                  tarefaExpandida = !tarefaExpandida;
+                });
+              },
+              icon: Icon(
+                tarefaExpandida ? Icons.expand_less : Icons.expand_more,
+                color: const Color(0xFF000000),
+              ),
+            ),
+            onTap: () {
+              setState(() {
+                tarefaExpandida = !tarefaExpandida;
+              });
+            },
           ),
-          color: const Color(0xFFF7F2FA),
-          child: Column(
-            children: [
-              // Cabeçalho (Sempre Visível)
-              ListTile(
-                // Título da Tarefa
-                title: Text(tarefaAtual.tituloTarefa ?? "Sem Título"),
 
-                // CheckBox
-                leading: Checkbox(
-                  value: tarefaFeita,
-                  activeColor: const Color(0xFF00FF77),
-                  onChanged: (newBool) {
-                    setState(() {
-                      tarefaFeita = newBool ?? false;
-                    });
-                  },
-                ),
-
-                // Botão para expandir
-                trailing: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      tarefaExpandida = !tarefaExpandida;
-                    });
-                  },
-                  icon: Icon(
-                    tarefaExpandida ? Icons.expand_less : Icons.expand_more,
-                    color: const Color(0xFF000000),
+          // Conteúdo Expansível
+          if (tarefaExpandida)
+            Column(
+              children: [
+                const Divider(height: 20, indent: 16, endIndent: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.tarefaAtual.descricaoTarefa,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 14),
                   ),
                 ),
-                onTap: () {
-                  setState(() {
-                    tarefaExpandida = !tarefaExpandida;
-                  });
-                },
-              ),
-
-              // Conteúdo Expansível
-              if (tarefaExpandida)
-                Column(
+                const Divider(height: 20, indent: 16, endIndent: 16),
+                
+                // Botões de Ação
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Divisão entre título e o conteúdo expandido.
-                    const Divider(height: 20, indent: 16, endIndent: 16),
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      // Descrição da Tarefa
-                      child: Text(
-                        tarefaAtual.descricaoTarefa ?? "Sem descrição",
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-
-                    // Divisão entre Descrição e Botões.
-                    const Divider(height: 20, indent: 16, endIndent: 16),
-
-                    // Botões de Ações (Editar e Excluir)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    // Editar
+                    Column(
                       children: [
-                        // Botão Editar
-                        Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => EditarTarefaView(
-                                    tarefaId: tarefaAtual.id,
-                                    tituloTarefaAtual: tarefaAtual.tituloTarefa,
-                                    descricaoTarefaAtual:
-                                        tarefaAtual.descricaoTarefa,
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.edit,
-                                size: 30,
-                                color: Color(0xFFFF9B00),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => EditarTarefaView(
+                                tarefaId: widget.tarefaAtual.id,
+                                tituloTarefaAtual: widget.tarefaAtual.tituloTarefa,
+                                descricaoTarefaAtual: widget.tarefaAtual.descricaoTarefa,
                               ),
-                            ),
-                            const Text(
-                              'Editar',
-                              style: TextStyle(
-                                color: Color(0xFFFF9B00),
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                            );
+                          },
+                          icon: const Icon(Icons.edit, size: 30, color: Color(0xFFFF9B00)),
                         ),
-
-                        // Espaçamento entre os botões
-                        const SizedBox(width: 40),
-
-                        // Botão Excluir
-                        Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => ExcluirTarefaView(
-                                    tarefaId: tarefaAtual.id,
-                                    tituloTarefa: tarefaAtual.tituloTarefa,
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.delete,
-                                size: 30,
-                                color: Color(0xFFFF1800),
-                              ),
-                            ),
-                            const Text(
-                              'Excluir',
-                              style: TextStyle(
-                                color: Color(0xFFFF1800),
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
+                        const Text('Editar', style: TextStyle(color: Color(0xFFFF9B00), fontSize: 14)),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(width: 40),
+                    // Excluir
+                    Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ExcluirTarefaView(
+                                tarefaId: widget.tarefaAtual.id,
+                                tituloTarefa: widget.tarefaAtual.tituloTarefa,
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.delete, size: 30, color: Color(0xFFFF1800)),
+                        ),
+                        const Text('Excluir', style: TextStyle(color: Color(0xFFFF1800), fontSize: 14)),
+                      ],
+                    ),
                   ],
                 ),
-            ],
-          ),
-        );
-      },
+                const SizedBox(height: 8),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

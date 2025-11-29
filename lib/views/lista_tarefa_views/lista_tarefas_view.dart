@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:anote_e_lembre/models/tarefa_model.dart';
 import 'package:anote_e_lembre/views_models/usuario_view_model.dart';
 import 'package:anote_e_lembre/views_models/tarefa_view_model.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/appbar_view.dart';
@@ -18,7 +19,6 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
   @override
   void initState() {
     super.initState();
-    // Carrega as tarefas ao iniciar a tela.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final usuarioViewModel = Provider.of<UsuarioViewModel>(
         context,
@@ -35,24 +35,40 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
     });
   }
 
+  Widget _buildListaTarefas(List<Tarefa> tarefas) {
+    if (tarefas.isEmpty) {
+      return const Center(child: Text("Nenhuma tarefa aqui."));
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: tarefas.length,
+      itemBuilder: (context, index) {
+        final tarefa = tarefas[index];
+        return Column(
+          children: [
+            TarefaView(tarefaAtual: tarefa),
+            const SizedBox(height: 10),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        appBar:
+            ListaTarefaAppBar(),
 
-        // Appbar
-        appBar: ListaTarefaAppBar(),
-
-        // Lógica de para alterar de de floatingActionButton
         floatingActionButton: Builder(
           builder: (context) {
             final TabController controller = DefaultTabController.of(context);
             return AnimatedBuilder(
               animation: controller,
               builder: (context, child) {
-                // Se o index for 2, retorna o botão de excluir,
-                // Caso contrário (0 ou 1), retorna o botão de adicionar
                 return controller.index == 2
                     ? const ExcluirTodasTarefasView()
                     : const AdicionarTarefaView();
@@ -61,52 +77,32 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
           },
         ),
 
-        body: TabBarView(
-          children: [
+        body: Consumer<TarefaViewModel>(
+          builder: (context, tarefaViewModel, child) {
+            final todasTarefas = tarefaViewModel.listaTarefas;
 
-            // Aba 1: Todas as Tarefas
-            Consumer<TarefaViewModel>(
-              builder: (context, tarefaViewModel, child) {
-                // Verifica se a lista está vazia
-                if (tarefaViewModel.ListaTarefas.isEmpty) {
-                  return const Center(
-                    child: Text("Nenhuma tarefa encontrada."),
-                  );
-                }
+            final tarefasPendentes = todasTarefas
+                .where((t) => t.tarefaFeita == false)
+                .toList();
 
-                // Lista Vertical Todas as Tarefas
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: tarefaViewModel.ListaTarefas.length,
-                  itemBuilder: (context, index) {
-                    // Passa o índice para a TarefaView
-                    return Column(
-                      children: [
-                        TarefaView(indexTarefa: index),
-                        const SizedBox(height: 10),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
+            final tarefasFeitas = todasTarefas
+                .where((t) => t.tarefaFeita == true)
+                .toList();
 
-            // Aba 2: Pendentes
-            const Center(
-              child: Text(
-                "Tarefas Pendentes",
-                style: TextStyle(color: Color(0xFF000000)),
-              ),
-            ),
+            return TabBarView(
+              children: [
 
-            // Aba 3: Feitas
-            const Center(
-              child: Text(
-                "Tarefas Feitas",
-                style: TextStyle(color: Color(0xFF000000)),
-              ),
-            ),
-          ],
+                // Aba 1: Todas
+                _buildListaTarefas(todasTarefas),
+
+                // Aba 2: Pendentes
+                _buildListaTarefas(tarefasPendentes),
+
+                // Aba 3: Feitas
+                _buildListaTarefas(tarefasFeitas),
+              ],
+            );
+          },
         ),
       ),
     );
