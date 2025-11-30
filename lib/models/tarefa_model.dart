@@ -25,7 +25,7 @@ class Tarefa {
         });
   }
 
-  // Ler Tarefas
+  // Ler Tarefas.
   Future<List<Tarefa>> lerTarefas(String userId) async {
     final query = await FirebaseFirestore.instance
         .collection("usuarios")
@@ -39,14 +39,14 @@ class Tarefa {
         id: doc.id,
         tituloTarefa: data["tituloTarefa"] ?? "",
         descricaoTarefa: data["descricaoTarefa"] ?? "",
-        tarefaFeita: data["feita"] ?? false, // Lê o status, se não existir, assume false
+        tarefaFeita: data["feita"] ?? false,
       );
     }).toList();
 
     return listaTarefas;
   }
 
-  // Atualizar Tarefa
+  // Atualizar Tarefa.
   Future<void> atualizarTarefa(
     String userId,
     String tarefaId,
@@ -64,7 +64,7 @@ class Tarefa {
         });
   }
 
-  // Deletar Tarefa
+  // Deletar Tarefa.
   Future<void> deletarTarefa(String userId, String tarefaId) async {
     await FirebaseFirestore.instance
         .collection("usuarios")
@@ -74,6 +74,7 @@ class Tarefa {
         .delete();
   }
 
+  // Atualizar Status.
   Future<void> atualizarStatus(
     String userId,
     String tarefaId,
@@ -89,5 +90,21 @@ class Tarefa {
     });
   }
 
-  
+  // Deletar Todas as Tarefas Feitas.
+  Future<void> deletarTodasTarefasFeitas(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection("usuarios")
+        .doc(userId)
+        .collection("tarefas")
+        .where('feita', isEqualTo: true)
+        .get();
+
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    for (var doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
+  }
 }

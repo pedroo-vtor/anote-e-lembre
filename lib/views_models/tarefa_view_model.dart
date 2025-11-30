@@ -22,6 +22,7 @@ class TarefaViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Salvar Tarefa.
   Future<bool> salvarTarefa(
     String uid,
     String tituloTarefa,
@@ -39,16 +40,22 @@ class TarefaViewModel extends ChangeNotifier {
     return true;
   }
 
+  //Carregar Tarefa.
   Future<void> carregarTarefa(String uid) async {
-    Tarefa tarefaAuxiliar = Tarefa(id: "", tituloTarefa: "", descricaoTarefa: "");
+    Tarefa tarefaAuxiliar = Tarefa(
+      id: "",
+      tituloTarefa: "",
+      descricaoTarefa: "",
+    );
     print('USUÁRIO ID NO VIEW MODEL: $uid');
-    
+
     listaTarefas = await tarefaAuxiliar.lerTarefas(uid);
 
     print("Tarefas carregadas: ${listaTarefas.length}");
     notifyListeners();
   }
 
+  // Atualizar Tarefa.
   Future<void> atualizarTarefa(
     String uid,
     String tarefaId,
@@ -65,21 +72,40 @@ class TarefaViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Deletar Tarefa.
   Future<void> deletarTarefa(String uid, String tarefaId) async {
     tarefa = Tarefa(id: uid, tituloTarefa: "", descricaoTarefa: "");
     await tarefa!.deletarTarefa(uid, tarefaId);
     notifyListeners();
   }
 
-  Future<void> alternarStatusTarefa(String uid, Tarefa tarefaAlvo, bool novoStatus) async {
+  // Alternar Status da Tarefa.
+  Future<void> alternarStatusTarefa(
+    String uid,
+    Tarefa tarefaAlvo,
+    bool novoStatus,
+  ) async {
     final index = listaTarefas.indexWhere((t) => t.id == tarefaAlvo.id);
     if (index != -1) {
       listaTarefas[index].tarefaFeita = novoStatus;
       notifyListeners();
     }
 
-    Tarefa tarefaAuxiliar = Tarefa(id: "", tituloTarefa: "", descricaoTarefa: "");
+    Tarefa tarefaAuxiliar = Tarefa(
+      id: "",
+      tituloTarefa: "",
+      descricaoTarefa: "",
+    );
     await tarefaAuxiliar.atualizarStatus(uid, tarefaAlvo.id, novoStatus);
+  }
+
+  // Deletar Todas as Tarefas Feitas
+  Future<void> deletarTodasTarefasFeitas(String uid) async {
+    Tarefa tarefaAuxiliar = Tarefa(id: "", tituloTarefa: "", descricaoTarefa: "");
+    await tarefaAuxiliar.deletarTodasTarefasFeitas(uid);
+
+    listaTarefas.removeWhere((t) => t.tarefaFeita == true);
     
+    notifyListeners();
   }
 }
