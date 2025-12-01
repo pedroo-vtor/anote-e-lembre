@@ -17,31 +17,66 @@ class LoginView extends StatelessWidget {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Colors.white,
         padding: const EdgeInsets.all(16.00),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 30,
           children: [
             Text(
-              'Anote e Lembre (LOGO)',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              'LOGO',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 50,
+                color: const Color(0xFFFFD900),
+              ),
             ),
             /*Image(
               height: 100,
               width: 100,
               image: AssetImage('assets/logo-login.jpg'),
             ),*/
+
+            // Formulário Email.
             TextField(
               controller: emailController,
-              decoration: InputDecoration(labelText: 'E-mail'),
+              cursorColor: Colors.black,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFF5F5F5),
+                hintText: 'email',
+                prefixIcon: Icon(Icons.email, color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF838287)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF838287)),
+                ),
+              ),
             ),
+
+            // Formulário senha.
             TextField(
               controller: senhaController,
-              decoration: InputDecoration(labelText: 'Senha'),
+              cursorColor: Colors.black,
+              decoration: InputDecoration(
+                hintText: 'senha',
+                filled: true,
+                fillColor: Color(0xFFF5F5F5),
+                prefixIcon: Icon(Icons.password, color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF838287)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF838287)),
+                ),
+              ),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+
+            //Espaçamento
+            SizedBox(height: 0.0),
+
             Consumer<UsuarioViewModel>(
               builder: (context, viewModel, child) {
                 return ElevatedButton(
@@ -54,7 +89,9 @@ class LoginView extends StatelessWidget {
                     if (user) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ListaTarefasView()),
+                        MaterialPageRoute(
+                          builder: (context) => ListaTarefasView(),
+                        ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,7 +101,21 @@ class LoginView extends StatelessWidget {
                       );
                     }
                   },
-                  child: Text('Login'),
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(900, 40),
+                    backgroundColor: const Color(0xFFFFD900),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
+                  ),
                 );
               },
             ),
@@ -78,7 +129,10 @@ class LoginView extends StatelessWidget {
                   },
                 );
               },
-              child: Text('Não tem conta? Cadastra-se!'),
+              child: Text(
+                'Não tem conta? Cadastra-se!',
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
             ),
 
             GestureDetector(
@@ -90,7 +144,10 @@ class LoginView extends StatelessWidget {
                   },
                 );
               },
-              child: Text('Esqueci Minha Senha'),
+              child: Text(
+                'Esqueceu a senha?',
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
             ),
           ],
         ),
