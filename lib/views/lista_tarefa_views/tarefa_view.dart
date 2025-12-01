@@ -20,14 +20,6 @@ class _TarefaViewState extends State<TarefaView> {
 
   @override
   Widget build(BuildContext context) {
-    /*final tarefaViewModel = Provider.of<TarefaViewModel>(
-      context,
-      listen: false,
-    );*/
-    /*final usuarioViewModel = Provider.of<UsuarioViewModel>(
-      context,
-      listen: false,
-    );*/
     return Consumer<TarefaViewModel>(
       builder: (context, tarefaViewModel, child) {
         return Card(

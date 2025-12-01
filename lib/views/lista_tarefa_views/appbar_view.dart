@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/*Info: Appbar da lista de tarefa*/
-
 class ListaTarefaAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(110);
@@ -13,11 +11,6 @@ class ListaTarefaAppBar extends StatelessWidget implements PreferredSizeWidget {
       /*Cor de Fundo*/
       backgroundColor: const Color(0xFFFFD900),
       elevation: 0,
-      /*Menu Hambúrguer*/
-      leading: IconButton(
-        onPressed: () {},
-        icon: Icon(Icons.menu_rounded, size: 40),
-      ),
 
       /*TabBar*/
       bottom: const TabBar(

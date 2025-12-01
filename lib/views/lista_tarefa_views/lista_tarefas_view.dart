@@ -7,6 +7,7 @@ import 'package:anote_e_lembre/views/lista_tarefa_views/appbar_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/tarefa_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/adicionar_tarefa_view.dart';
 import 'package:anote_e_lembre/views/lista_tarefa_views/excluir_todas_tarefas_view.dart';
+import 'package:anote_e_lembre/views/lista_tarefa_views/drawer_view.dart';
 
 class ListaTarefasView extends StatefulWidget {
   const ListaTarefasView({super.key});
@@ -60,8 +61,12 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar:
-            ListaTarefaAppBar(),
+
+        // Appbar
+        appBar: ListaTarefaAppBar(),
+
+        // Drawer
+        drawer: DrawerView(),
 
         floatingActionButton: Builder(
           builder: (context) {
@@ -91,7 +96,6 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
 
             return TabBarView(
               children: [
-
                 // Aba 1: Todas
                 _buildListaTarefas(todasTarefas),
 
