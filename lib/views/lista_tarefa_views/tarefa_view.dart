@@ -20,6 +20,10 @@ class _TarefaViewState extends State<TarefaView> {
 
   @override
   Widget build(BuildContext context) {
+    final bool temDescricao = widget.tarefaAtual.descricaoTarefa
+        .trim()
+        .isNotEmpty;
+
     return Consumer<TarefaViewModel>(
       builder: (context, tarefaViewModel, child) {
         return Card(
@@ -35,6 +39,7 @@ class _TarefaViewState extends State<TarefaView> {
                 builder: ((context, usuarioViewModel, child) {
                   final usuarioId = usuarioViewModel.usuario?.id ?? '';
                   return ListTile(
+
                     // Título
                     title: Text(widget.tarefaAtual.tituloTarefa),
 
@@ -63,6 +68,7 @@ class _TarefaViewState extends State<TarefaView> {
                         color: const Color(0xFF000000),
                       ),
                     ),
+
                     onTap: () {
                       setState(() {
                         tarefaExpandida = !tarefaExpandida;
@@ -76,16 +82,20 @@ class _TarefaViewState extends State<TarefaView> {
               if (tarefaExpandida)
                 Column(
                   children: [
-                    const Divider(height: 20, indent: 16, endIndent: 16),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        widget.tarefaAtual.descricaoTarefa,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(fontSize: 14),
+                    if (temDescricao) ...[
+                      const Divider(height: 20, indent: 16, endIndent: 16),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.tarefaAtual.descricaoTarefa,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 14),
+                        ),
                       ),
-                    ),
-                    const Divider(height: 20, indent: 16, endIndent: 16),
+                      const Divider(height: 20, indent: 16, endIndent: 16),
+                    ] else ...[
+                      const Divider(height: 20, indent: 16, endIndent: 16),
+                    ],
 
                     // Botões de Ação
                     Row(

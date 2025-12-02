@@ -8,8 +8,12 @@ class AdicionarTarefaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController tituloTarefaController = TextEditingController();
-    TextEditingController descricaoTarefaController = TextEditingController();
+    final TextEditingController tituloTarefaController =
+        TextEditingController();
+    final TextEditingController descricaoTarefaController =
+        TextEditingController();
+
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return Consumer<TarefaViewModel>(
       builder: (context, tarefaViewModel, child) {
@@ -24,135 +28,136 @@ class AdicionarTarefaView extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-
-                  //Título do Alert Dialog
                   title: const Text(
                     "Adicionar Tarefa",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
+                  backgroundColor: const Color(0xFFF7F2FA),
 
-                  //Cor de Fundo
-                  backgroundColor: Color(0xFFF7F2FA),
-
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      // Formulário título
-                      TextField(
-                        controller: tituloTarefaController,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          hintText: "Tarefa...",
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xFF838287),
-                              width: 1,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xFF838287),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Espaçamento entre título e descrição
-                      SizedBox(height: 20),
-
-                      // Formulário Descrição
-                      TextFormField(
-                        controller: descricaoTarefaController,
-                        maxLines: 6,
-                        minLines: 4,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          hintText: 'Descrição...',
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF838287)),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF838287)),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-
-                      // Espaçamento entre descrição e botões
-                      SizedBox(height: 20),
-
-                      //Botões de Ações
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          
-                          //Botão Cancelar
-                          TextButton(
-                            onPressed: () {
-                              tituloTarefaController.clear();
-                              descricaoTarefaController.clear();
-                              Navigator.of(context).pop();
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: Color(0xFF999E9A),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                  content: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: tituloTarefaController,
+                          cursorColor: Colors.black,
+                          maxLength: 60,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'O título é obrigatório';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: "Tarefa...",
+                            counterText:
+                                "",
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xFF838287),
+                                width: 1,
                               ),
                             ),
-                            child: Text(
-                              "Cancelar",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFF000000),
-                                fontWeight: FontWeight.bold,
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xFF838287),
+                                width: 1,
                               ),
                             ),
                           ),
+                        ),
 
-                          // Espaçamento entre os botões de ações
-                          SizedBox(width: 30),
+                        const SizedBox(height: 20),
 
-                          //Botão Adicionar
-                          Consumer<UsuarioViewModel>(
-                            builder: (context, usuarioViewModel, child) {
-                              return TextButton(
-                                onPressed: () async {
-                                  await tarefaViewModel.salvarTarefa(
-                                    usuarioViewModel.usuario!.id!,
-                                    tarefaViewModel.tituloTarefa =
+                        TextFormField(
+                          controller: descricaoTarefaController,
+                          maxLines: 4,
+                          minLines: 2,
+                          maxLength: 300,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            hintText: 'Descrição (opcional)...',
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color(0xFF838287),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color(0xFF838287),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Botões
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                tituloTarefaController.clear();
+                                descricaoTarefaController.clear();
+                                Navigator.of(context).pop();
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: const Color(0xFF999E9A),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                  color: Color(0xFF000000),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 30),
+
+                            Consumer<UsuarioViewModel>(
+                              builder: (context, usuarioViewModel, child) {
+                                return TextButton(
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await tarefaViewModel.salvarTarefa(
+                                        usuarioViewModel.usuario!.id!,
                                         tituloTarefaController.text,
-                                    tarefaViewModel.descricaoTarefa =
                                         descricaoTarefaController.text,
-                                  );
-                                  tituloTarefaController.clear();
-                                  descricaoTarefaController.clear();
-                                  Navigator.of(context).pop();
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: Color(0xFFFFD900),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                      );
+                                      tituloTarefaController.clear();
+                                      descricaoTarefaController.clear();
+                                      if (context.mounted)
+                                        Navigator.of(context).pop();
+                                    }
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFFFFD900),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  "Adicionar",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xFF000000),
-                                    fontWeight: FontWeight.bold,
+                                  child: const Text(
+                                    "Adicionar",
+                                    style: TextStyle(
+                                      color: Color(0xFF000000),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
