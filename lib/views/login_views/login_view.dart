@@ -23,19 +23,9 @@ class LoginView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 30,
           children: [
-            Text(
-              'LOGO',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
-                color: const Color(0xFFFFD900),
-              ),
-            ),
-            /*Image(
-              height: 100,
-              width: 100,
-              image: AssetImage('assets/logo-login.jpg'),
-            ),*/
+            Image(image: AssetImage('assets/images/anote-e-lembre-logo.png')),
+
+            SizedBox(height: 10),
 
             // Formulário Email.
             TextField(

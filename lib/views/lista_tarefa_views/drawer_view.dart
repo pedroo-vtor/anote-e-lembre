@@ -17,20 +17,19 @@ class DrawerView extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              // Topo
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(top: 60, bottom: 40, left: 20),
-                color: Colors.white,
-                child: Text(
-                  "LOGO",
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFFFD900),
+              SafeArea(
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 30,
                   ),
-                  textAlign: TextAlign.center,
+                  color: Colors.white,
+                  child: Image(
+                    image: AssetImage('assets/images/anote-e-lembre-logo.png'),
+                    height: 80,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
 
